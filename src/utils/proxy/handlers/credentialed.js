@@ -25,6 +25,10 @@ export default async function credentialedProxyHandler(req, res, map) {
         "Content-Type": "application/json",
       };
 
+      if (widget.headers) {
+        Object.assign(headers, widget.headers);
+      }
+
       if (widget.type === "stocks") {
         const { providers } = getSettings();
         if (widget.provider === "finnhub" && providers?.finnhub) {

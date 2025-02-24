@@ -30,6 +30,9 @@ export default async function transmissionProxyHandler(req, res) {
     headers = {
       "content-type": "application/json",
     };
+    if (widget.headers) {
+      Object.assign(headers, widget.headers);
+    }
     cache.put(`${headerCacheKey}.${service}`, headers);
   }
 
