@@ -1,7 +1,7 @@
+import Block from "components/services/widget/block";
+import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
 
-import Container from "components/services/widget/container";
-import Block from "components/services/widget/block";
 import useWidgetAPI from "utils/proxy/use-widget-api";
 
 export default function Component({ service }) {
@@ -38,11 +38,7 @@ export default function Component({ service }) {
     );
   }
 
-  const status = serverData.online ? (
-    <span className="text-green-500">{t("gamedig.online")}</span>
-  ) : (
-    <span className="text-red-500">{t("gamedig.offline")}</span>
-  );
+  const status = serverData.online ? t("gamedig.online") : t("gamedig.offline");
   const name = serverData.online ? serverData.name : "-";
   const map = serverData.online ? serverData.map : "-";
   const currentPlayers = serverData.online ? `${serverData.players} / ${serverData.maxplayers}` : "-";

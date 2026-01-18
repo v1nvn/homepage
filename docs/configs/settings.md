@@ -78,7 +78,7 @@ background:
 You can apply a blur filter to the service & bookmark cards. Note this option is incompatible with the background blur, saturate and brightness filters.
 
 ```yaml
-cardBlur: sm # sm, "", md, etc... see https://tailwindcss.com/docs/backdrop-blur
+cardBlur: xs # xs, md, etc... see https://tailwindcss.com/docs/backdrop-blur
 ```
 
 ## Favicon
@@ -101,13 +101,27 @@ theme: dark # or light
 
 ## Color Palette
 
-You can configured a fixed color palette (and disable the palette switcher) by passing the `color` option, like so:
+You can configure a fixed color palette (and disable the palette switcher) by passing the `color` option, like so:
 
 ```yaml
 color: slate
 ```
 
 Supported colors are: `slate`, `gray`, `zinc`, `neutral`, `stone`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`, `red`, `white`
+
+## Block Highlight Levels
+
+You can override the default Tailwind classes applied when a widget highlight rule resolves to the `good`, `warn`, or `danger` level.
+
+```yaml
+blockHighlights:
+  levels:
+    good: "bg-emerald-500/40 text-emerald-950 dark:bg-emerald-900/60 dark:text-emerald-400"
+    warn: "bg-amber-300/30 text-amber-900 dark:bg-amber-900/30 dark:text-amber-200"
+    danger: "bg-rose-700/45 text-rose-200 dark:bg-rose-950/70 dark:text-rose-400"
+```
+
+Any unspecified level falls back to the built-in defaults.
 
 ## Layout
 
@@ -254,15 +268,29 @@ layout:
     columns: 4
 ```
 
-### Five Columns
+### Full Width
 
-You can add a fifth column to services (when `style: columns` which is default) by adding:
+You can make homepage take up the entire window width by adding:
 
 ```yaml
-fiveColumns: true
+fullWidth: true
 ```
 
-By default homepage will max out at 4 columns for services with `columns` style
+### Maximum Group Columns
+
+You can set the maximum number of columns of groups on larger screen sizes (note this is only for groups with the default `style: columns`, not groups with `style: row`) by adding:
+
+```yaml
+maxGroupColumns: 8 # default is 4 for services, 6 for bookmarks, max 8
+```
+
+By default homepage will max out at 4 columns for services and 6 for bookmarks, thus the minimum for this setting is _5_. Of course, if you're setting this to higher numbers, you may want to consider enabling the [fullWidth](#full-width) option as well.
+
+If you want to set the maximum columns for bookmark groups separately, you can do so by adding:
+
+```yaml
+maxBookmarkGroupColumns: 6 # default is 6, max 8
+```
 
 ### Collapsible sections
 
@@ -368,7 +396,9 @@ Set your desired language using:
 language: fr
 ```
 
-Currently supported languages: ca, de, en, es, fr, he, hr, hu, it, nb-NO, nl, pt, ru, sv, vi, zh-CN, zh-Hant
+Currently supported languages: ca, de, en, es, fr, he, hr, hu, it, nb-NO, nl, pt, ru, sv, vi, zh-Hans (Simplified), zh-Hant (Traditional)
+
+`zh-CN` will still work and is automatically mapped to `zh-Hans` for backwards compatibility.
 
 You can also specify locales e.g. for the DateTime widget, e.g. en-AU, en-GB, etc.
 
@@ -427,6 +457,7 @@ There are a few optional settings for the Quick Launch feature:
 - `showSearchSuggestions`: show search suggestions for the internet search. If this is not specified then the setting will be inherited from the search widget. If it is not specified there either, it will default to false. For custom providers the `suggestionUrl` needs to be set in order for this to work.
 - `provider`: search engine provider. If none is specified it will try to use the provider set for the Search Widget, if neither are present then internet search will be disabled.
 - `hideVisitURL`: disable detecting and offering an option to open URLs. This is false by default, enabling the feature.
+- `mobileButtonPosition`: enables and sets the position of the mobile quicklaunch button. Options are `top-left`, `top-right`, `bottom-left`, `bottom-right`. This is empty by default, disabling the feature.
 
 ```yaml
 quicklaunch:
@@ -447,12 +478,18 @@ quicklaunch:
   suggestionUrl: https://ac.ecosia.org/autocomplete?type=list&q=
 ```
 
-## Homepage Version
+## Homepage Version & Update Checking
 
 By default the release version is displayed at the bottom of the page. To hide this, use the `hideVersion` setting, like so:
 
 ```yaml
 hideVersion: true
+```
+
+You can disable checking for new versions from GitHub (enabled by default) with:
+
+```yaml
+disableUpdateCheck: true
 ```
 
 ## Log Path
@@ -465,9 +502,9 @@ logpath: /logfile/path
 
 By default, logs are sent both to `stdout` and to a file at the path specified. This can be changed by setting the `LOG_TARGETS` environment variable to one of `both` (default), `stdout` or `file`.
 
-## Show Docker Stats
+## Show Container Stats
 
-You can show all docker stats expanded in `settings.yaml`:
+You can show all docker or proxmox stats expanded in `settings.yaml`:
 
 ```yaml
 showStats: true
@@ -536,3 +573,18 @@ or per service widget (`services.yaml`) with:
 ```
 
 If either value is set to true, the error message will be hidden.
+
+## Disable Search Engine Indexing
+
+You can request that search engines not to index your Homepage instance by enabling the `disableIndexing` setting.
+
+```yaml
+disableIndexing: true
+```
+
+When enabled, this will:
+
+- Disallow all crawlers in `robots.txt`
+- Add `<meta name="robots" content="noindex, nofollow">` tags to prevent indexing
+
+By default this feature is disabled.

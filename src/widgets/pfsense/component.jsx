@@ -1,7 +1,7 @@
+import Block from "components/services/widget/block";
+import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
 
-import Container from "components/services/widget/container";
-import Block from "components/services/widget/block";
 import useWidgetAPI from "utils/proxy/use-widget-api";
 
 export default function Component({ service }) {
@@ -56,16 +56,7 @@ export default function Component({ service }) {
         label="pfsense.temp"
         value={t("common.number", { value: systemData.data.temp_c, style: "unit", unit: "celsius" })}
       />
-      <Block
-        label="pfsense.wanStatus"
-        value={
-          wan.status === "up" ? (
-            <span className="text-green-500">{t("pfsense.up")}</span>
-          ) : (
-            <span className="text-red-500">{t("pfsense.down")}</span>
-          )
-        }
-      />
+      <Block label="pfsense.wanStatus" value={wan.status === "up" ? t("pfsense.up") : t("pfsense.down")} />
       {showWanIP && <Block label="pfsense.wanIP" value={wan.ipaddr} />}
       {showDiskUsage && <Block label="pfsense.disk" value={t("common.percent", { value: diskUsage.toFixed(2) })} />}
     </Container>
